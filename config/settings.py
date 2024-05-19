@@ -12,10 +12,10 @@ load_dotenv(BASE_DIR / '.env')
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-=az0z=rv-^mn*r)@pz03x54xwyfpqz2t9ys=lzm^4=u^hpmke4'
+SECRET_KEY = os.environ.get('DJANGO_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG_ENV')
 
 ALLOWED_HOSTS = [
     'localhost',
@@ -150,11 +150,11 @@ CSRF_TRUSTED_ORIGINS = [
     "https://read-and-write.example.com",
 ]
 
-# REDIS_HOST = os.getenv('REDIS_HOST')
-# REDIS_PORT = os.getenv('REDIS_PORT')
-#
-# CELERY_BROKER_URL = f'redis://{REDIS_HOST}:{REDIS_PORT}'
-# CELERY_RESULT_BACKEND = f'redis://{REDIS_HOST}:{REDIS_PORT}'
+REDIS_HOST = os.environ.get('REDIS_HOST')
+REDIS_PORT = os.environ.get('REDIS_PORT')
+
+CELERY_BROKER_URL = f'redis://{REDIS_HOST}:{REDIS_PORT}'
+CELERY_RESULT_BACKEND = f'redis://{REDIS_HOST}:{REDIS_PORT}'
 
 CELERY_BEAT_SCHEDULE = {
     'task-name': {
