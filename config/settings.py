@@ -158,7 +158,7 @@ CELERY_RESULT_BACKEND = f'redis://{REDIS_HOST}:{REDIS_PORT}'
 
 CELERY_BEAT_SCHEDULE = {
     'task-name': {
-        'task': 'tracker.tasks.reminder_habits',
+        'task': 'habits.telegram_task.check_and_send_reminders',
         'schedule': timedelta(minutes=1)
     }
 }
