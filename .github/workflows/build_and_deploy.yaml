@@ -25,12 +25,6 @@ jobs:
           pip install setuptools
           pip install -r requirements.txt
 
-#      - name: Run tests
-#        env:
-#          DJANGO_KEY: ${{ secrets.DJANGO_KEY}}
-#        run: |
-#          echo "DJANGO_KEY=$DJANGO_KEY" > .env
-#          python manage.py test
 
   deploy:
     runs-on: ubuntu-latest
@@ -57,12 +51,27 @@ jobs:
           TELEGRAM_API_TOKEN: ${{ secrets.TELEGRAM_API_TOKEN }}
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+
             cd ~/app
+            touch .env
+          
+            sed -i '/DB_NAME/d' .env
+            sed -i '/DB_USER/d' .env
+            sed -i '/DB_PASS/d' .env
+            sed -i '/DJANGO_KEY/d' .env
+            sed -i '/TELEGRAM_API_TOKEN/d' .env
+
             echo "DB_NAME=${DB_NAME}" >> .env
             echo "DB_USER=${DB_USER}" >> .env
             echo "DB_PASS=${DB_PASS}" >> .env
             echo "DJANGO_KEY=${DJANGO_KEY}" >> .env
             echo "TELEGRAM_API_TOKEN=${TELEGRAM_API_TOKEN}" >> .env
+
+            curl https://registry-1.docker.io/v2/
+
+            export DOCKER_CLIENT_TIMEOUT=500
+            export COMPOSE_HTTP_TIMEOUT=500
+
             docker-compose down
             docker-compose up --build -d
           EOF
@@ -76,3 +85,4 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             docker system prune -a -f
+
