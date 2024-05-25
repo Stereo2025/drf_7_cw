@@ -76,4 +76,3 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             docker system prune -a -f
-
