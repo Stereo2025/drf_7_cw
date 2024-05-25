@@ -1,0 +1,72 @@
+version: '3'
+
+services:
+  app:
+    build: .
+    tty: true
+    command: python manage.py runserver 0.0.0.0:8000
+    ports:
+      - '8000:8000'
+    volumes:
+      - .:/drf_7_cw
+    environment:
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASS}
+      - DJANGO_KEY=${DJANGO_KEY}
+      - TELEGRAM_API_TOKEN=${TELEGRAM_API_TOKEN}
+    depends_on:
+      db:
+        condition: service_healthy
+
+  celery:
+    build: .
+    tty: true
+    command: celery -A config worker -l INFO
+    environment:
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASS}
+      - DJANGO_KEY=${DJANGO_KEY}
+      - TELEGRAM_API_TOKEN=${TELEGRAM_API_TOKEN}
+    depends_on:
+      - db
+      - redis
+      - app
+
+  celery_beat:
+    build: .
+    tty: true
+    command: celery -A config beat -l INFO -S django
+    environment:
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASS}
+      - DJANGO_KEY=${DJANGO_KEY}
+      - TELEGRAM_API_TOKEN=${TELEGRAM_API_TOKEN}
+    depends_on:
+      - db
+      - redis
+      - app
+
+  redis:
+    image: redis:alpine
+    ports:
+      - '6380:6379'
+
+  db:
+    image: postgres:alpine
+    env_file:
+      - .env
+    volumes:
+      - pg_data:/var/lib/postgresql/data/pgdata
+    ports:
+      - '5432:5432'
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  pg_data:
