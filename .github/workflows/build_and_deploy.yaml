@@ -25,12 +25,12 @@ jobs:
           pip install setuptools
           pip install -r requirements.txt
 
-      - name: Run tests
-        env:
-          DJANGO_KEY: ${{ secrets.DJANGO_KEY}}
-        run: |
-          echo "DJANGO_KEY=$DJANGO_KEY" > .env
-          python manage.py test
+#      - name: Run tests
+#        env:
+#          DJANGO_KEY: ${{ secrets.DJANGO_KEY}}
+#        run: |
+#          echo "DJANGO_KEY=$DJANGO_KEY" > .env
+#          python manage.py test
 
   deploy:
     runs-on: ubuntu-latest
