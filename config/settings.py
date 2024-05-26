@@ -18,6 +18,7 @@ SECRET_KEY = os.environ.get('DJANGO_KEY')
 DEBUG = os.environ.get('DEBUG_ENV')
 
 ALLOWED_HOSTS = [
+    '130.193.43.126',
     'localhost',
     '127.0.0.1',
     'testserver',
