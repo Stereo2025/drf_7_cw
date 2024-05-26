@@ -10,9 +10,9 @@ services:
     volumes:
       - .:/drf_7_cw
     environment:
-      - DB_NAME=${DB_NAME}
-      - DB_USER=${DB_USER}
-      - DB_PASS=${DB_PASS}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - DB_HOST=db
       - DJANGO_KEY=${DJANGO_KEY}
       - TELEGRAM_API_TOKEN=${TELEGRAM_API_TOKEN}
@@ -25,9 +25,9 @@ services:
     tty: true
     command: celery -A config worker -l INFO
     environment:
-      - DB_NAME=${DB_NAME}
-      - DB_USER=${DB_USER}
-      - DB_PASS=${DB_PASS}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - DB_HOST=db
       - DJANGO_KEY=${DJANGO_KEY}
       - TELEGRAM_API_TOKEN=${TELEGRAM_API_TOKEN}
@@ -41,9 +41,9 @@ services:
     tty: true
     command: celery -A config beat -l INFO -S django
     environment:
-      - DB_NAME=${DB_NAME}
-      - DB_USER=${DB_USER}
-      - DB_PASS=${DB_PASS}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - DB_HOST=db
       - DJANGO_KEY=${DJANGO_KEY}
       - TELEGRAM_API_TOKEN=${TELEGRAM_API_TOKEN}
@@ -62,8 +62,8 @@ services:
     env_file:
       - .env
     environment:
-      POSTGRES_DB: ${DB_NAME}
-      POSTGRES_USER: ${DB_USER}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     command: [ "sh", "-c", "echo POSTGRES_DB=$POSTGRES_DB POSTGRES_USER=$POSTGRES_USER POSTGRES_PASSWORD=$POSTGRES_PASSWORD && sleep 10 && docker-entrypoint.sh postgres" ]
     volumes:
