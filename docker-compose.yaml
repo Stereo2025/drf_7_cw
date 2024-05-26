@@ -13,6 +13,7 @@ services:
       - DB_NAME=${DB_NAME}
       - DB_USER=${DB_USER}
       - DB_PASS=${DB_PASS}
+      - DB_HOST=db
       - DJANGO_KEY=${DJANGO_KEY}
       - TELEGRAM_API_TOKEN=${TELEGRAM_API_TOKEN}
     depends_on:
@@ -27,6 +28,7 @@ services:
       - DB_NAME=${DB_NAME}
       - DB_USER=${DB_USER}
       - DB_PASS=${DB_PASS}
+      - DB_HOST=db
       - DJANGO_KEY=${DJANGO_KEY}
       - TELEGRAM_API_TOKEN=${TELEGRAM_API_TOKEN}
     depends_on:
@@ -42,6 +44,7 @@ services:
       - DB_NAME=${DB_NAME}
       - DB_USER=${DB_USER}
       - DB_PASS=${DB_PASS}
+      - DB_HOST=db
       - DJANGO_KEY=${DJANGO_KEY}
       - TELEGRAM_API_TOKEN=${TELEGRAM_API_TOKEN}
     depends_on:
@@ -58,6 +61,10 @@ services:
     image: postgres:alpine
     env_file:
       - .env
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
     volumes:
       - pg_data:/var/lib/postgresql/data/pgdata
     ports:
