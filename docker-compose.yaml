@@ -65,6 +65,7 @@ services:
       POSTGRES_DB: ${DB_NAME}
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    command: [ "sh", "-c", "echo $POSTGRES_PASSWORD && sleep 10 && docker-entrypoint.sh postgres" ]
     volumes:
       - pg_data:/var/lib/postgresql/data/pgdata
     ports:
