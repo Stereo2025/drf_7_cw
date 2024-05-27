@@ -4,18 +4,11 @@ services:
   app:
     build: .
     tty: true
-    command: python manage.py runserver 0.0.0.0:8000
+    command: python manage.py migrate && python manage.py runserver 0.0.0.0:8000
     ports:
       - '8000:8000'
     volumes:
       - .:/drf_7_cw
-    environment:
-      - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - DB_HOST=db
-      - DJANGO_KEY=${DJANGO_KEY}
-      - TELEGRAM_API_TOKEN=${TELEGRAM_API_TOKEN}
     depends_on:
       db:
         condition: service_healthy
@@ -24,13 +17,6 @@ services:
     build: .
     tty: true
     command: celery -A config worker -l INFO
-    environment:
-      - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - DB_HOST=db
-      - DJANGO_KEY=${DJANGO_KEY}
-      - TELEGRAM_API_TOKEN=${TELEGRAM_API_TOKEN}
     depends_on:
       - db
       - redis
@@ -40,13 +26,6 @@ services:
     build: .
     tty: true
     command: celery -A config beat -l INFO -S django
-    environment:
-      - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - DB_HOST=db
-      - DJANGO_KEY=${DJANGO_KEY}
-      - TELEGRAM_API_TOKEN=${TELEGRAM_API_TOKEN}
     depends_on:
       - db
       - redis
@@ -65,7 +44,6 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-    command: [ "sh", "-c", "echo POSTGRES_DB=$POSTGRES_DB POSTGRES_USER=$POSTGRES_USER POSTGRES_PASSWORD=$POSTGRES_PASSWORD && sleep 10 && docker-entrypoint.sh postgres" ]
     volumes:
       - pg_data:/var/lib/postgresql/data
     ports:
