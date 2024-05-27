@@ -151,11 +151,11 @@ CSRF_TRUSTED_ORIGINS = [
     "https://read-and-write.example.com",
 ]
 
-REDIS_HOST = os.environ.get('REDIS_HOST')
-REDIS_PORT = os.environ.get('REDIS_PORT')
+REDIS_HOST = os.environ.get('REDIS_HOST', 'localhost')
+REDIS_PORT = os.environ.get('REDIS_PORT', 6379)
 
-CELERY_BROKER_URL = f'redis://{REDIS_HOST}:{REDIS_PORT}'
-CELERY_RESULT_BACKEND = f'redis://{REDIS_HOST}:{REDIS_PORT}'
+CELERY_BROKER_URL = f'redis://{REDIS_HOST}:{int(REDIS_PORT)}/0'
+CELERY_RESULT_BACKEND = f'redis://{REDIS_HOST}:{int(REDIS_PORT)}/0'
 
 CELERY_BEAT_SCHEDULE = {
     'task-name': {
